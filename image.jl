@@ -2,5 +2,11 @@ Pkg.add("Images")
 using Random
 using Images
 
-@btime img = rand(2000,2000)
-@btime imgg = Gray.(img)
+img = load("4.1.07.tiff")
+
+channel_img = channelview(img)
+
+perm_img = permutedims(channelview(img),(2,3,1))
+
+channel_r = perm_img[:,:,1]
+
