@@ -1,24 +1,25 @@
 using Pkg
-Pkg.add("CSV")
 Pkg.add("DataFrames")
 Pkg.add("BenchmarkTools")
 Pkg.add("GLM")
-using CSV
 using DataFrames
 using Random
 using GLM
 using BenchmarkTools
+include("image.jl")
 
+design_matrix = ProcessingDesignMatrix("George_W_Bush","top")
 
-df = CSV.read("Iris.csv", DataFrame)
+y_matrix = ProcessingDesignMatrix("George_W_Bush","bot")
 
-#Declaring global varib
-X = hcat(ones(150),Matrix(df[:,2:4])) #design matrix
-#θ = Vector{Float64}(undef,size(X)[2])  
-#rand!(θ,1:100)
-y = df[:,5]
+df = DataFrame(design_matrix,:auto)
 
-x = coef(lm(Term(:SepalLengthCm) ~ sum(Term.(Symbol.(names(df, Not(:SepalLengthCm))))),df)) 
+df[!,"y"] = y_matrix[:,1]
 
+#x = coef(lm(Term(:SepalLengthCm) ~ sum(Term.(Symbol.(names(df, Not(:SepalLengthCm))))),df)) 
+print("Starting regression...")
+x = coef(lm(Term(:y) ~ sum(Term.(Symbol.(names(df, Not(:y))))),df))
+println(x)
+print("Finished regression!")
 
-
+#y_matrix[:,1]
